@@ -36,7 +36,7 @@ rm -rf /tmp/dgraph-builder/dgraph
 docker build -t dgraph-builder /Users/sudhishkr/scratch/github/skrdgraph/dgraph-builder
 
 # run the container
-docker run --name="dgraph-builder" --env GOOS=$GOOS -v /tmp/dgraph-builder:/dgraph-builder -it dgraph-builder  &>/dev/null &
+docker run --name="dgraph-builder" --env GOOS=$GOOS -v /tmp/dgraph-builder:/dgraph-builder dgraph-builder  &>/dev/null &
 sleep 3
 
 # exec cmd into the container
