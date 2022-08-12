@@ -9,6 +9,6 @@ dgraph binary quickly without having to setup `Go` environment or other dependen
 ## How to Build
 
 ```bash
-sh dgraph-builder.sh linux b17395d
+sh dgraph-builder.sh linux b17395d # this will build for v21.03.2
 ```
 
