@@ -47,3 +47,7 @@ docker exec -it $(docker ps -q --filter 'name=dgraph-builder') /bin/bash -c "cp 
 # clean up
 docker stop $(docker ps -aq --filter 'name=dgraph-builder')
 docker rm $(docker ps -aq --filter 'name=dgraph-builder')
+
+# binary
+echo "Binary created at /tmp/dgraph-builder/dgraph"
+ls -alrt /tmp/dgraph-builder/dgraph
