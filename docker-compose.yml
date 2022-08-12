@@ -1,0 +1,144 @@
+# Auto-generated with: [ls]
+#
+version: "3.5"
+services:
+  alpha1:
+    image: public.ecr.aws/n1e3y0t3/dgraph-lambda:latest
+    container_name: alpha1
+    working_dir: /data/alpha1
+    labels:
+      cluster: test
+    ports:
+    - 8080:8080
+    - 9080:9080
+    volumes:
+    - type: bind
+      source: $GOPATH/bin
+      target: /gobin
+      read_only: true
+    - type: bind
+      source: /tmp/dgraph-builder/hmac_secret_file
+      target: /secret/hmac
+      read_only: true
+    command: /gobin/dgraph alpha --my=alpha1:7080 --zero=zero1:5080,zero2:5082,zero3:5083
+      --logtostderr -v=2 --expose_trace=true --raft "idx=1; group=1" --security "whitelist=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.0.0.0/8;"
+      --acl "secret-file=/secret/hmac;"
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+  alpha2:
+    image: public.ecr.aws/n1e3y0t3/dgraph-lambda:latest
+    container_name: alpha2
+    working_dir: /data/alpha2
+    labels:
+      cluster: test
+    ports:
+    - 8082:8082
+    - 9082:9082
+    volumes:
+    - type: bind
+      source: $GOPATH/bin
+      target: /gobin
+      read_only: true
+    - type: bind
+      source: /tmp/dgraph-builder/hmac_secret_file
+      target: /secret/hmac
+      read_only: true
+    command: /gobin/dgraph alpha -o 2 --my=alpha2:7082 --zero=zero1:5080,zero2:5082,zero3:5083
+      --logtostderr -v=2 --expose_trace=true --raft "idx=2; group=1" --security "whitelist=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.0.0.0/8;"
+      --acl "secret-file=/secret/hmac;"
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+  alpha3:
+    image: public.ecr.aws/n1e3y0t3/dgraph-lambda:latest
+    container_name: alpha3
+    working_dir: /data/alpha3
+    labels:
+      cluster: test
+    ports:
+    - 8083:8083
+    - 9083:9083
+    volumes:
+    - type: bind
+      source: $GOPATH/bin
+      target: /gobin
+      read_only: true
+    - type: bind
+      source: /tmp/dgraph-builder/hmac_secret_file
+      target: /secret/hmac
+      read_only: true
+    command: /gobin/dgraph alpha -o 3 --my=alpha3:7083 --zero=zero1:5080,zero2:5082,zero3:5083
+      --logtostderr -v=2 --expose_trace=true --raft "idx=3; group=1" --security "whitelist=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.0.0.0/8;"
+      --acl "secret-file=/secret/hmac;"
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+  zero1:
+    image: public.ecr.aws/n1e3y0t3/dgraph-lambda:latest
+    container_name: zero1
+    working_dir: /data/zero1
+    labels:
+      cluster: test
+    ports:
+    - 5080:5080
+    - 6080:6080
+    volumes:
+    - type: bind
+      source: $GOPATH/bin
+      target: /gobin
+      read_only: true
+    command: /gobin/dgraph zero --raft='idx=1' --my=zero1:5080 --replicas=3 --logtostderr
+      -v=2 --bindall
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+  zero2:
+    image: public.ecr.aws/n1e3y0t3/dgraph-lambda:latest
+    container_name: zero2
+    working_dir: /data/zero2
+    depends_on:
+    - zero1
+    labels:
+      cluster: test
+    ports:
+    - 5082:5082
+    - 6082:6082
+    volumes:
+    - type: bind
+      source: $GOPATH/bin
+      target: /gobin
+      read_only: true
+    command: /gobin/dgraph zero -o 2 --raft='idx=2' --my=zero2:5082 --replicas=3 --logtostderr
+      -v=2 --peer=zero1:5080
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+  zero3:
+    image: public.ecr.aws/n1e3y0t3/dgraph-lambda:latest
+    container_name: zero3
+    working_dir: /data/zero3
+    depends_on:
+    - zero2
+    labels:
+      cluster: test
+    ports:
+    - 5083:5083
+    - 6083:6083
+    volumes:
+    - type: bind
+      source: $GOPATH/bin
+      target: /gobin
+      read_only: true
+    command: /gobin/dgraph zero -o 3 --raft='idx=3' --my=zero3:5083 --replicas=3 --logtostderr
+      -v=2 --peer=zero1:5080
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+volumes: {}
