@@ -2,6 +2,8 @@
 
 export GOOS=$1
 export COMMIT=$2
+export RUN_NUMBER=$(date +%s)
+export DGRAPH_BUILDER_RUN_NUMBER="dgraph-builder-$RUN_NUMBER"
 
 if [ $GOOS == "linux" ]
 then
@@ -36,17 +38,17 @@ rm -rf /tmp/dgraph-builder/dgraph
 docker build -t dgraph-builder /Users/sudhishkr/scratch/github/skrdgraph/dgraph-builder
 
 # run the container
-docker run --name="dgraph-builder" --env GOOS=$GOOS -v /tmp/dgraph-builder:/dgraph-builder -it dgraph-builder  &>/dev/null &
+docker run --name=$DGRAPH_BUILDER_RUN_NUMBER --env GOOS=$GOOS -v /tmp/dgraph-builder:/dgraph-builder -it dgraph-builder  &>/dev/null &
 sleep 3
 
 # exec cmd into the container
-docker exec -it $(docker ps -q --filter 'name=dgraph-builder') /bin/bash -c "git clone https://github.com/dgraph-io/dgraph.git"
-docker exec -it $(docker ps -q --filter 'name=dgraph-builder') /bin/bash -c "cd dgraph; git checkout $COMMIT; make install;"
-docker exec -it $(docker ps -q --filter 'name=dgraph-builder') /bin/bash -c "cp $BINARY_PATH /dgraph-builder/dgraph"
+docker exec -it $(docker ps -q --filter 'name=$DGRAPH_BUILDER_RUN_NUMBER') /bin/bash -c "git clone https://github.com/dgraph-io/dgraph.git"
+docker exec -it $(docker ps -q --filter 'name=$DGRAPH_BUILDER_RUN_NUMBER') /bin/bash -c "cd dgraph; git checkout $COMMIT; make install;"
+docker exec -it $(docker ps -q --filter 'name=$DGRAPH_BUILDER_RUN_NUMBER') /bin/bash -c "cp $BINARY_PATH /dgraph-builder/dgraph"
 
 # clean up
-docker stop $(docker ps -aq --filter 'name=dgraph-builder')
-docker rm $(docker ps -aq --filter 'name=dgraph-builder')
+docker stop $(docker ps -aq --filter 'name=$DGRAPH_BUILDER_RUN_NUMBER')
+docker rm $(docker ps -aq --filter 'name=$DGRAPH_BUILDER_RUN_NUMBER')
 
 # binary
 echo "Binary created at /tmp/dgraph-builder/dgraph"
