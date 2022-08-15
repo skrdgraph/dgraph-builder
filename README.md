@@ -16,7 +16,7 @@ sh dgraph-builder.sh linux master
 
 ## How to Build & Launch
 ```bash
-sh dgraph-launcher.sh 
+sh dgraph-launcher.sh master
 ```
 
 
