@@ -19,5 +19,11 @@ sh dgraph-builder.sh linux master
 sh dgraph-launcher.sh master
 ```
 
+## CleanUp
+```bash
+sh dgraph-cleaner.sh # TODO: this needs fine-tuning
+```
+
+
 
 
