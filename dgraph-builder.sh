@@ -30,7 +30,8 @@ else
 fi
 
 # cleanup dgraph binary
-rm -rf /tmp/dgraph-builder/dgraph
+rm -rf /tmp/dgraph-builder
+mkdir /tmp/dgraph-builder
 
 # build container base
 docker build -t dgraph-builder /Users/sudhishkr/scratch/github/skrdgraph/dgraph-builder
